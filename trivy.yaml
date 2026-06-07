@@ -1,0 +1,10 @@
+scan:
+  type: image
+  format: table
+  exit-code: 1
+  severity: HIGH,CRITICAL
+  ignore-unfixed: true
+cache:
+  dir: .trivycache
+report:
+  output: trivy-report.txt

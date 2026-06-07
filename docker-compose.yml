@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  web-app:
+    build: { context: ., dockerfile: Dockerfile }
+    ports: ["8080:8080"]
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    depends_on: [db, cache]
+    networks: [sre-network]
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    ports: ["5432:5432"]
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=appdb
+    volumes: [pgdata:/var/lib/postgresql/data]
+    networks: [sre-network]
+
+  cache:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    volumes: [redisdata:/data]
+    networks: [sre-network]
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  sre-network:
+    driver: bridge
